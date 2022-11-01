@@ -1,2 +1,3 @@
-Companion/node_modules
-Companion/.expo
+Companion/frontend/node_modules
+Companion/frontend/.expo
+Companion/server/node_modules
