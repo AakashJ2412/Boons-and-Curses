@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Context } from './UserContext';
 import GameCreateJoin from './components/GameCreateJoin/GameCreateJoin';
-
+import { io } from "socket.io-client";
+const socket = io("ws://localhost:5000");
 
 const App = () => {
 
@@ -12,9 +13,10 @@ const App = () => {
   const [user, setUser] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  socket.connect()
 
   return (
-    <Context.Provider value={{ gameId, setGameId, user, setUser, isAdmin, setIsAdmin, setGameStarted }}>
+    <Context.Provider value={{ gameId, setGameId, user, setUser, isAdmin, setIsAdmin, setGameStarted, socket }}>
       <NavigationContainer>
         {!gameStarted ?
           <GameCreateJoin />

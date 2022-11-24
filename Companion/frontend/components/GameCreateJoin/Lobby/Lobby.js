@@ -24,16 +24,40 @@ const dummyPlayers = [
 const Lobby = ({ navigation }) => {
     const appContext = useContext(Context);
     const [players, setPlayers] = useState([]);
+    const [admin, setAdmin] = useState("");
+    const [startLoad, setStartLoad] = useState(false);
 
     const fetchData = async () => {
-        console.log("fetching data");
-        // await delay(3000);
+        console.log("fetching data"+appContext.user);
+        appContext.socket.emit("fetchGameSessionData", { gameSessionId: appContext.gameId, user: appContext.user });
+        await appContext.socket.on("fetchGameSessionDataResponse", (data) => {
+            if(data.gameSessionId === appContext.gameId && data.retVal) {
+                console.log("fetching data response");
+                setAdmin(data.gameSession.admin);
+                setPlayers(data.gameSession.players);
+            }
+        })
         console.log("done fetching data");
-        setPlayers([...dummyPlayers]);
     }
 
     useEffect(() => {
         fetchData();
+        appContext.socket.on("playerJoined", (data) => {
+            console.log("checkForJoin")
+            if(data.joinVal === true && data.gameSessionId === appContext.gameId) {
+                console.log("player joined");
+                fetchData();
+            }
+        })
+        appContext.socket.on("gameSessionStarted", (data) => {
+            if(data.gameSessionId === appContext.gameId && data.startVal) {
+                appContext.setGameStarted(true);
+            } else {
+                setStartLoad(false);
+            }
+        })
+        console.log(players)
+        console.log(admin)
     }, [])
 
     const styles = StyleSheet.create({
@@ -55,7 +79,8 @@ const Lobby = ({ navigation }) => {
 
     const startGame = () => {
         // TODO logic for game starting
-        appContext.setGameStarted(true);
+        setStartLoad(true);
+        appContext.socket.emit("startGameSession", { gameSessionId: appContext.gameId, user: appContext.user });
     }
 
     /*
@@ -69,7 +94,7 @@ const Lobby = ({ navigation }) => {
                 <Card.Content>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} >
                         <Title>{appContext.user}</Title>
-                        <FontAwesome5 name={'crown'} />
+                        {appContext.user === admin ? <FontAwesome5 name={'crown'}/> : null }
                     </View>
                 </Card.Content>
             </Card>
@@ -82,19 +107,22 @@ const Lobby = ({ navigation }) => {
                         <Text style={{ margin: 10 }} variant="labelSmall">Waiting for players to join</Text>
                     </View>
                     : players.map((player, index) => {
+                        if (player === appContext.user) {
+                            return null;
+                        }
                         return (
                             <Card style={styles.card} key={index}>
                                 <Card.Content>
                                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} >
-                                        <Title>{player.name}</Title>
-                                        <FontAwesome5 name={'crown'} />
+                                        <Title>{player}</Title>
+                                        {player === admin ? <FontAwesome5 name={'crown'} /> : null}
                                     </View>
                                 </Card.Content>
                             </Card>
                         )
                     })}
             </View>
-            <Button style={styles.button} mode="contained" onPress={startGame} disabled={!appContext.isAdmin} labelStyle={{
+            <Button style={styles.button} mode="contained" onPress={startGame} disabled={!appContext.isAdmin || startLoad} labelStyle={{
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
