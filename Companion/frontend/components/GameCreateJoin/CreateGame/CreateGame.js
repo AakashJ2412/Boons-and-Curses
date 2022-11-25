@@ -41,7 +41,7 @@ const CreateGame = ({ navigation }) => {
     }
 
     const [user1, setUser1] = useState("");
-    const [gameLink, setGameLink] = useState("asdasdasdaddasdasdasdasdasfgafasdasdasdaskdjalksdjaklsjdlaksjdklj");
+    const [gameLink, setGameLink] = useState((Math.random() + 1).toString(36).substring(7));
     const [error, setError] = useState("");
     const appContext = useContext(Context)
 
@@ -57,6 +57,7 @@ const CreateGame = ({ navigation }) => {
         appContext.setUser(user1);
         appContext.setGameId(gameLink);
         appContext.setIsAdmin(true);
+        appContext.socket.emit("createGameSession", { gameSessionId: gameLink, player: user1 });
         navigation.navigate("Lobby");
     }
 

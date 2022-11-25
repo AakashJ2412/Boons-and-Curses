@@ -7,17 +7,19 @@ import GameCreateJoin from './components/GameCreateJoin/GameCreateJoin';
 import GodSelectStack from './components/GodSelectStack/GodSelectStack';
 import Game from './components/Game/Game';
 
+import { io } from "socket.io-client";
+const socket = io("ws://localhost:5000");
 
 const App = () => {
 
   const [gameId, setGameId] = useState("");
   const [user, setUser] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [gameStatus, setGameStatus] = useState("started");
-  const [userGod, setUserGod] = useState("");
+  const [gameStatus, setGameStatus] = useState(false);
+  socket.connect()
 
   return (
-    <Context.Provider value={{ gameId, setGameId, user, setUser, isAdmin, setIsAdmin, setGameStatus, userGod, setUserGod }}>
+    <Context.Provider value={{ gameId, setGameId, user, setUser, isAdmin, setIsAdmin, setGameStatus, socket }}>
       <NavigationContainer>
         {gameStatus === "notStarted" ?
           <GameCreateJoin />
