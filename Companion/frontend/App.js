@@ -15,11 +15,12 @@ const App = () => {
   const [gameId, setGameId] = useState("");
   const [user, setUser] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [gameStatus, setGameStatus] = useState(false);
+  const [gameStatus, setGameStatus] = useState("notStarted");
+  const [userGod, setUserGod] = useState("");
   socket.connect()
 
   return (
-    <Context.Provider value={{ gameId, setGameId, user, setUser, isAdmin, setIsAdmin, setGameStatus, socket }}>
+    <Context.Provider value={{ gameId, setGameId, user, setUser, isAdmin, setIsAdmin, setGameStatus, socket, userGod, setUserGod }}>
       <NavigationContainer>
         {gameStatus === "notStarted" ?
           <GameCreateJoin />
