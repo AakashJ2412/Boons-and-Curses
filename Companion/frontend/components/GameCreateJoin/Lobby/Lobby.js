@@ -55,7 +55,7 @@ const Lobby = ({ navigation }) => {
 
     const startGame = () => {
         // TODO logic for game starting
-        appContext.setGameStarted(true);
+        appContext.setGameStatus("godSelect");
     }
 
     /*

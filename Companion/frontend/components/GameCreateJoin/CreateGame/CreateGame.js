@@ -23,16 +23,6 @@ const CreateGame = ({ navigation }) => {
             maxWidth: 280,
             padding: 5
         },
-        textBox: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            maxWidth: 300,
-            backgroundColor: 'lightgrey',
-            padding: 10,
-            borderRadius: 2,
-            margin: 10
-        },
         button: {
             width: 300,
             height: 50,
@@ -80,10 +70,8 @@ const CreateGame = ({ navigation }) => {
                 style={styles.input}
             />
 
-            <TouchableOpacity onPress={onShare}>
-                <View style={styles.textBox}>
+            <TouchableOpacity onPress={onShare} style={{backgroundColor:"lightgrey", width: 300,borderRadius: 2, padding: 10}}>
                     <Text style={styles.textHighlight} numberOfLines={1} variant="bodyLarge">{gameLink}</Text>
-                </View>
             </TouchableOpacity>
             <Text>
                 Tap the box to copy link
