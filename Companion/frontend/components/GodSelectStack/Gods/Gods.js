@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Context } from '../../../UserContext';
-import { Text, Button } from 'react-native-paper';
+import { Text, Button, Snackbar } from 'react-native-paper';
 
 const godsList = [
     {
@@ -41,6 +41,8 @@ const Gods = ({ navigation }) => {
     const [godDescription, setGodDescription] = useState("");
     const [godImage, setGodImage] = useState('https://picsum.photos/500');
     const [godRivalries, setGodRivalries] = useState([]);
+    const [godLoad, setGodLoad] = useState(false);
+    const [error, setError] = useState("");
 
     const appContext = useContext(Context);
 
@@ -54,6 +56,14 @@ const Gods = ({ navigation }) => {
 
     useEffect(() => {
         getGod();
+        appContext.socket.on("godSelected", (data) => {
+            if(data.gameSessionId === appContext.gameId && data.selectVal && data.user === appContext.user) {
+                appContext.setGameStatus("started");
+            } else {
+                setError("Error authenticating session");
+                setGodLoad(false);
+            }
+        })
     }, []);
 
     const styles = StyleSheet.create({
@@ -73,7 +83,8 @@ const Gods = ({ navigation }) => {
     })
 
     const start = () => {
-        appContext.setGameStatus("started");
+        setGodLoad(true);
+        appContext.socket.emit("selectGod", {gameSessionId: appContext.gameId, user: appContext.user, selectedGod: appContext.userGod});
     }
 
     return (
@@ -87,7 +98,10 @@ const Gods = ({ navigation }) => {
                     <Text variant='headlineSmall' key={index} style={{ margin: 2.5, marginLeft: 10 }}>{rivalry}</Text>
                 )
             })}
-            <Button style={{ margin: 10, alignSelf: 'center', width: 300, position: "absolute", zIndex: 5, marginTop:"85vh" }} mode="contained" onPress={() => start()}>Start</Button>
+            <Button style={{ margin: 10, alignSelf: 'center', width: 300, position: "absolute", zIndex: 5, marginTop:"85vh" }} mode="contained" disabled={godLoad} onPress={() => start()}>Start</Button>
+            <Snackbar visible={error} onDismiss={() => setError("")} action={{ label: 'Dismiss', onPress: () => setError("") }}>
+                {error}
+            </Snackbar>
         </View >
     )
 }
