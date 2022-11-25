@@ -51,7 +51,7 @@ const Lobby = ({ navigation }) => {
         })
         appContext.socket.on("gameSessionStarted", (data) => {
             if(data.gameSessionId === appContext.gameId && data.startVal) {
-                appContext.setGameStarted(true);
+                appContext.setGameStatus("godSelect");
             } else {
                 setStartLoad(false);
             }
