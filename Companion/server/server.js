@@ -36,7 +36,7 @@ io.on('connection',(socket)=>{
     console.log(data.gameSessionId)
     console.log("join game session")
     const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
-    if (!gameSession || gameSession.startState === 1) {
+    if (!gameSession || gameSession.startState !== 0) {
       console.log("game session not found")
       console.log(gameSession)
       socket.emit(data.player+"_joinGameSessionResponse", {ret: false})
@@ -62,10 +62,10 @@ io.on('connection',(socket)=>{
   socket.on("startGameSession", (data) => {
     console.log("start game session")
     const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
-    if (!gameSession || gameSession.startState === 1 || data.user !== gameSession.admin) {
+    if (!gameSession || gameSession.startState !== 0 || data.user !== gameSession.admin) {
       console.log("game session not found")
       console.log(gameSession)
-      socket.emit(data.player+"gameSessionStarted", {gameSessionId: data.gameSessionId, startVal: false})
+      socket.emit("gameSessionStarted", {gameSessionId: data.gameSessionId, startVal: false})
     } else {
       console.log("game session found")
       console.log(gameSession)
