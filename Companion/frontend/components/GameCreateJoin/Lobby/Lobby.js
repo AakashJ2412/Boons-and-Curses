@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { Card, Title, Text, Button, ActivityIndicator, MD2Colors } from 'react-native-paper';
+import { Card, Title, Text, Button, ActivityIndicator, MD2Colors, Snackbar } from 'react-native-paper';
 import { Context } from '../../../UserContext';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -26,6 +26,7 @@ const Lobby = ({ navigation }) => {
     const [players, setPlayers] = useState([]);
     const [admin, setAdmin] = useState("");
     const [startLoad, setStartLoad] = useState(false);
+    const [error, setError] = useState("");
 
     const fetchData = async () => {
         console.log("fetching data"+appContext.user);
@@ -34,7 +35,11 @@ const Lobby = ({ navigation }) => {
             if(data.gameSessionId === appContext.gameId && data.retVal) {
                 console.log("fetching data response");
                 setAdmin(data.gameSession.admin);
-                setPlayers(data.gameSession.players);
+                let playerNames = [];
+                for(let i=0;i<data.gameSession.players.length;i++) {
+                    playerNames.push(data.gameSession.players[i].name)
+                }
+                setPlayers(playerNames);
             }
         })
         console.log("done fetching data");
@@ -53,6 +58,7 @@ const Lobby = ({ navigation }) => {
             if(data.gameSessionId === appContext.gameId && data.startVal) {
                 appContext.setGameStatus("godSelect");
             } else {
+                setError("Error starting game. Please reconnect");
                 setStartLoad(false);
             }
         })
@@ -129,6 +135,9 @@ const Lobby = ({ navigation }) => {
                 maxWidth: 280,
                 padding: 5
             }}>Start Game</Button>
+            <Snackbar visible={error} onDismiss={() => setError("")} action={{ label: 'Dismiss', onPress: () => setError("") }}>
+                {error}
+            </Snackbar>
         </View >
     )
 }

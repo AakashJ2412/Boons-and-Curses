@@ -25,7 +25,7 @@ io.on('connection',(socket)=>{
     console.log("create game session")
     gameSessions.push({
       id: data.gameSessionId,
-      players: [data.player],
+      players: [{name: data.player, selectedGod: -1}],
       admin: data.player,
       startState: 0
     })
@@ -44,7 +44,7 @@ io.on('connection',(socket)=>{
       console.log("game session found")
       console.log(gameSession)
       socket.emit(data.player+"_joinGameSessionResponse", {ret: true})
-      gameSession.players.push(data.player)
+      gameSession.players.push({name: data.player, selectedGod: -1})
       io.sockets.emit("playerJoined", {gameSessionId: data.gameSessionId, joinVal: true})
     }
   })
@@ -69,8 +69,25 @@ io.on('connection',(socket)=>{
     } else {
       console.log("game session found")
       console.log(gameSession)
-      gameSession.startState = 1
+      let gameSessionInd = gameSessions.findIndex(gameSession => gameSession.id === data.gameSessionId)
+      gameSessions[gameSessionInd].startState = 1
       io.sockets.emit("gameSessionStarted", {gameSessionId: data.gameSessionId, startVal: true})
+    }
+  })
+
+  socket.on("selectGod", (data) => {
+    console.log("select god")
+    const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
+    if (!gameSession || gameSession.startState !== 1) {
+      console.log("game session not found")
+      console.log(gameSession)
+      socket.emit("godSelected", {gameSessionId: data.gameSessionId, selectVal: false})
+    } else {
+      console.log("game session found")
+      console.log(gameSession)
+      let gameSessionInd = gameSessions.findIndex(gameSession => gameSession.id === data.gameSessionId)
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).selectedGod = data.selectedGod
+      socket.emit("godSelected", {gameSessionId: data.gameSessionId, selectVal: true, user: data.user})
     }
   })
 
