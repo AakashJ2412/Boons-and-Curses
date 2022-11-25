@@ -6,7 +6,8 @@
     "start": "export NODE_OPTIONS=--openssl-legacy-provider && expo start",
     "android": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --android",
     "ios": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --ios",
-    "web": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --web"
+    "web": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --web",
+    "wsl": "export NODE_OPTIONS=--openssl-legacy-provider && REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address 'Ethernet' | grep 'IP Address' | sed -r 's/^.*IP Address:\\W*//') expo start"
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
@@ -24,7 +25,8 @@
     "react-native-screens": "~3.15.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
-    "socket.io-client": "^4.5.3"
+    "socket.io-client": "^4.5.3",
+    "expo-barcode-scanner": "~11.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

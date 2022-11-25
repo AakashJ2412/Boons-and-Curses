@@ -15,7 +15,7 @@ const App = () => {
   const [gameId, setGameId] = useState("");
   const [user, setUser] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [gameStatus, setGameStatus] = useState("notStarted");
+  const [gameStatus, setGameStatus] = useState("started");
   const [userGod, setUserGod] = useState("");
   socket.connect()
 
