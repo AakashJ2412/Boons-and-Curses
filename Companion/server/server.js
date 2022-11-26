@@ -212,20 +212,6 @@ io.on('connection',(socket)=>{
     }
   })
 
-  socket.on("getUserStats", (data) => {
-    console.log("get user stats")
-    const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
-    if (!gameSession || gameSession.startState !== 1) {
-      console.log("game session not found")
-      console.log(gameSession)
-      socket.emit("userStats", {gameSessionId: data.gameSessionId, getVal: false})
-    } else {
-      console.log("game session found")
-      console.log(gameSession)
-      socket.emit("userStats", {gameSessionId: data.gameSessionId, getVal: true, user: data.user, stats: gameSessions.find(gameSession => gameSession.id === data.gameSessionId).players.find(player => player.name === data.user)})
-    }
-  })
-
   socket.on("playCard", (data) => {
     console.log("play a card")
     const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
@@ -244,7 +230,7 @@ io.on('connection',(socket)=>{
       let playerInd = gameSessions[gameSessionInd].players.findIndex(player => player.name === data.user)
       let oppInd = -1
       if(staticGameData.oppCards.includes(data.cardId)) {
-        let oppInd = gameSessions[gameSessionInd].players.findIndex(player => player.name === data.opponent);
+        oppInd = gameSessions[gameSessionInd].players.findIndex(player => player.name === data.opponent);
       }
       let selfHealthChange = 0, selfStrengthChange = 0, selfDefenseChange = 0, selfSpeedChange = 0, selfCharmChange = 0, selfAffinityChange = 0;
       let stabModifier = 1;
@@ -412,7 +398,7 @@ io.on('connection',(socket)=>{
         gameSessions[gameSessionInd].players[oppInd].charm += oppCharmChange;
         gameSessions[gameSessionInd].players[oppInd].affinity += oppAffinityChange;
       }
-      io.sockets.emit("cardPlayed", {gameSessionId: data.gameSessionId})
+      io.sockets.emit("cardPlayed", {gameSessionId: data.gameSessionId, playVal: true})
     }
   })
 

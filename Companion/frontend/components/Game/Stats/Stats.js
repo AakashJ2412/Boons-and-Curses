@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { MD2Colors, ProgressBar, Text } from 'react-native-paper';
+import {Context} from '../../../UserContext'
 
 const maxHealth = 600;
 const minHealth = 0;
@@ -17,36 +18,34 @@ const minAffinity = -250;
 
 const Stats = ({ navigation }) => {
 
+
+    const appContext = useContext(Context);
     const fetchStat = async () => {
         //fetchStat
-        let health = 500;
-        let strength = 100;
-        let defense = 100;
-        let speed = 100;
-        let charm = 100;
-        let affinity = 100;
-        setHealth(health);
-        setStrength(strength);
-        setDefense(defense);
-        setSpeed(speed);
-        setCharm(charm);
-        setAffinity(affinity);
-        health = (health - minHealth)/(maxHealth - minHealth);
-        strength = (strength - minStrength)/(maxStrength - minStrength);
-        defense = (defense - minDefense)/(maxDefense - minDefense);
-        speed = (speed - minSpeed)/(maxSpeed - minSpeed);
-        charm = (charm - minCharm)/(maxCharm - minCharm);
-        affinity = (affinity - minAffinity)/(maxAffinity - minAffinity);
-        setDisplayHealth(health);
-        setDisplayStrength(strength);
-        setDisplayDefense(defense);
-        setDisplaySpeed(speed);
-        setDisplayCharm(charm);
-        setDisplayAffinity(affinity);
-        console.log(health, strength, defense, speed, charm, affinity);
+        appContext.socket.emit("getPlayerStats", {gameSessionId: appContext.gameId, user: appContext.user});
     }
 
     useEffect(()=>{
+        appContext.socket.on("playerStats", (data) => {
+            console.log("update stats");
+            if(data.gameSessionId === appContext.gameId && data.user === appContext.user && data.statsVal === true) {
+                console.log(data)
+                setHealth(data.player.health);
+                setStrength(data.player.strength);
+                setDefense(data.player.defense);
+                setSpeed(data.player.speed);
+                setCharm(data.player.charm);
+                setAffinity(data.player.affinity);
+            } else {
+                console.log("Error fetching stats")
+            }
+        });
+        appContext.socket.on("cardPlayed", (data) => {
+            console.log("card played");
+            if(data.gameSessionId === appContext.gameId && data.playVal === true) {
+                appContext.socket.emit("getPlayerStats", {gameSessionId: appContext.gameId, user: appContext.user});
+            }
+        })
         fetchStat();
     }, [])
 
@@ -56,12 +55,6 @@ const Stats = ({ navigation }) => {
     const [speed, setSpeed] = useState(0);
     const [charm, setCharm] = useState(0);
     const [defense, setDefense] = useState(0);
-    const [displayHealth, setDisplayHealth] = useState(0);
-    const [displayStrength, setDisplayStrength] = useState(0);
-    const [displayAffinity, setDisplayAffinity] = useState(0);
-    const [displaySpeed, setDisplaySpeed] = useState(0);
-    const [displayCharm, setDisplayCharm] = useState(0);
-    const [displayDefense, setDisplayDefense] = useState(0);
 
     const styles = StyleSheet.create({
         container: {
@@ -82,33 +75,33 @@ const Stats = ({ navigation }) => {
                 <View style={styles.stat}>
                     <Text variant="headlineMedium">Health</Text>
                     <View>
-                        <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={displayHealth} color={'red'} />
+                        <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={(health - minHealth)/(maxHealth - minHealth)} color={'red'} />
                         <Text variant="labelMedium" style={{ marginTop: 5 }}>{health}</Text>
                     </View>
                 </View>
                 <View style={styles.stat}>
                     <Text variant="headlineMedium">Strength</Text>
-                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={displayStrength} color={MD2Colors.orange400} />
+                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={(strength - minStrength)/(maxStrength - minStrength)} color={MD2Colors.orange400} />
                     <Text variant="labelMedium" style={{ marginTop: 5 }}>{strength}</Text>
                 </View>
                 <View style={styles.stat}>
                     <Text variant="headlineMedium">Defense</Text>
-                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={displayDefense} color={MD2Colors.blue600} />
+                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={(defense - minDefense)/(maxDefense - minDefense)} color={MD2Colors.blue600} />
                     <Text variant="labelMedium" style={{ marginTop: 5 }}>{defense}</Text>
                 </View>
                 <View style={styles.stat}>
                     <Text variant="headlineMedium">Charm</Text>
-                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={displayCharm} color={MD2Colors.pink300} />
+                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={(charm - minCharm)/(maxCharm - minCharm)} color={MD2Colors.pink300} />
                     <Text variant="labelMedium" style={{ marginTop: 5 }}>{charm}</Text>
                 </View>
                 <View style={styles.stat}>
                     <Text variant="headlineMedium">Speed</Text>
-                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={displaySpeed} color={MD2Colors.green400} />
+                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={(speed - minSpeed)/(maxSpeed - minSpeed)} color={MD2Colors.green400} />
                     <Text variant="labelMedium" style={{ marginTop: 5 }}>{speed}</Text>
                 </View>
                 <View style={styles.stat}>
                     <Text variant="headlineMedium">Affinity</Text>
-                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={displayAffinity} color={MD2Colors.purple900} />
+                    <ProgressBar style={{ alignSelf: 'center', height: 20 }} progress={(affinity - minAffinity)/(maxAffinity - minAffinity)} color={MD2Colors.purple900} />
                     <Text variant="labelMedium" style={{ marginTop: 5 }}>{affinity}</Text>
                 </View>
             </View>
