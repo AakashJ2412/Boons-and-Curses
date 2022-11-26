@@ -30,9 +30,10 @@ const Scan = ({ navigation }) => {
     const [selectedOpponent, setSelectedOpponent] = useState("");
     const [alertDialogShow, setAlertDialogShow] = useState(false);
     const appContext = useContext(Context);
+    const [cardData, setCardData] = useState();
 
     useEffect(() => {
-        // setOpponents([...appContext.opponents]);
+        setOpponents([...appContext.opponents]);
         const getBarCodeScannerPermissions = async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setBarCodeHasPermission(status === 'granted');
@@ -42,13 +43,15 @@ const Scan = ({ navigation }) => {
     }, []);
 
     const handleBarCodeScanned = ({ type, data }) => {
-        console.log(data)
+        console.log(data);
+        setCardData(data);
         setScanned(true);
         if (attackCardIds.includes(data)) {
             setDialogShow(true);
         }
         else {
             // make call to execute card which don't need to choose opponent
+            appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, cardId: cardData });
             setAlertDialogShow(true);
         }
     };
@@ -64,6 +67,15 @@ const Scan = ({ navigation }) => {
     const opponentChosen = () => {
         console.log(selectedOpponent);
         //make call to execute card which requires opponent
+        if (cardData === "PS2") {
+            opponents.forEach(element => {
+                if (element !== appContext.user) {
+                    appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: element, cardId: cardData });
+                }
+            });
+        } else {
+            appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: selectedOpponent, cardId: cardData });
+        }
         setDialogShow(false);
         setAlertDialogShow(true);
     }
