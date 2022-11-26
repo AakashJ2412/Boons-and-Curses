@@ -93,12 +93,11 @@ const Scan = ({ navigation }) => {
                             <ScrollView>
                                 {opponents.map((opponent, index) => {
                                     return (
-                                        <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                        <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} key={index}>
                                             <Text variant="labelLarge">
                                                 {opponent}
                                             </Text>
                                             <RadioButton
-                                                key={index}
                                                 value={opponent}
                                                 status={selectedOpponent === opponent ? 'checked' : 'unchecked'}
                                                 onPress={() => setSelectedOpponent(opponent)}

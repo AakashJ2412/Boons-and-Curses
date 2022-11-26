@@ -10,14 +10,9 @@ const godsList = [
         rivalries: ['Hades', 'Hephaestus'],
     },
     {
-        name: 'Poseidon',
-        description: 'Poseidon is the god of the sea, earthquakes, storms, and horses. He is the brother of Zeus and Hades, the father of Polyphemus, and the husband of Amphitrite.',
-        rivalries: ['Athena', 'Hades'],
-    },
-    {
-        name: 'Hades',
-        description: 'Hades is the god of the underworld, the dead, wealth, and fertility. He is the brother of Zeus and Poseidon, the husband of Persephone, and the father of Zagreus.',
-        rivalries: ['Zeus', 'Poseidon'],
+        name: 'Hephestus',
+        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        rivalries: ['Zeus', 'Hephaestus'],
     },
     {
         name: 'Aphrodite',
@@ -30,10 +25,15 @@ const godsList = [
         rivalries: ['Poseidon', 'Aphrodite'],
     },
     {
-        name: 'Hephestus',
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        rivalries: ['Zeus', 'Hephaestus'],
-    }
+        name: 'Hades',
+        description: 'Hades is the god of the underworld, the dead, wealth, and fertility. He is the brother of Zeus and Poseidon, the husband of Persephone, and the father of Zagreus.',
+        rivalries: ['Zeus', 'Poseidon'],
+    },
+    {
+        name: 'Poseidon',
+        description: 'Poseidon is the god of the sea, earthquakes, storms, and horses. He is the brother of Zeus and Hades, the father of Polyphemus, and the husband of Amphitrite.',
+        rivalries: ['Athena', 'Hades'],
+    },
 ]
 
 const Gods = ({ navigation }) => {
