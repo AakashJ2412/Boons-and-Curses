@@ -8,14 +8,14 @@ import GodSelectStack from './components/GodSelectStack/GodSelectStack';
 import Game from './components/Game/Game';
 
 import { io } from "socket.io-client";
-const socket = io("ws://localhost:5000");
+const socket = io("ws://192.168.203.70:5000");
 
 const App = () => {
 
   const [gameId, setGameId] = useState("");
   const [user, setUser] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [gameStatus, setGameStatus] = useState("godSelect");
+  const [gameStatus, setGameStatus] = useState("notStarted");
   const [userGod, setUserGod] = useState("");
   const [opponents, setOpponents] = useState([]);
   socket.connect()

@@ -118,7 +118,19 @@ io.on('connection',(socket)=>{
     }
   })
 
-  socket.on("getPl")
+  socket.on("getPlayerStats", (data) => {
+    console.log("get player stats")
+    const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
+    if (!gameSession || gameSession.startState !== 1) {
+      console.log("game session not found")
+      console.log(gameSession)
+      socket.emit("playerStats", {gameSessionId: data.gameSessionId, statsVal: false})
+    } else {
+      console.log("game session found")
+      console.log(gameSession)
+      socket.emit("playerStats", {gameSessionId: data.gameSessionId, statsVal: true, user: data.user, player: gameSession.players.find(player => player.name === data.user)})
+    }
+  })
 
   socket.on("getUserStats", (data) => {
     console.log("get user stats")
