@@ -7,7 +7,9 @@
     "android": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --android",
     "ios": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --ios",
     "web": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --web",
-    "wsl": "export NODE_OPTIONS=--openssl-legacy-provider && REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address 'Ethernet' | grep 'IP Address' | sed -r 's/^.*IP Address:\\W*//') expo start"
+    "wsl_wifi": "export NODE_OPTIONS=--openssl-legacy-provider && REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address 'Wi-Fi' | grep 'IP Address' | sed -r 's/^.*IP Address:\\W*//') expo start",
+    "wsl_raghav": "export NODE_OPTIONS=--openssl-legacy-provider && REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address 'Ethernet 2' | grep 'IP Address' | sed -r 's/^.*IP Address:\\W*//') expo start",
+    "wsl_ritvik": "export NODE_OPTIONS=--openssl-legacy-provider && REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address 'Ethernet' | grep 'IP Address' | sed -r 's/^.*IP Address:\\W*//') expo start"
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",

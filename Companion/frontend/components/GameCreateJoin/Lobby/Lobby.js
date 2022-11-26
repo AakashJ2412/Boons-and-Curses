@@ -39,7 +39,8 @@ const Lobby = ({ navigation }) => {
                 for(let i=0;i<data.gameSession.players.length;i++) {
                     playerNames.push(data.gameSession.players[i].name)
                 }
-                setPlayers(playerNames);
+                setPlayers([...playerNames]);
+                appContext.setOpponents([...playerNames]);
             }
         })
         console.log("done fetching data");

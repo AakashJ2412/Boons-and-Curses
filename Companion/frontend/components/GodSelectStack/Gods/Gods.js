@@ -7,32 +7,32 @@ const godsList = [
     {
         name: 'Zeus',
         description: 'Zeus is the king of the gods and the god of the sky and thunder. He is the son of Cronus and Rhea, the brother of Hades, Poseidon, Hera, Demeter, Hestia, and the father of Ares, Haephaestus',
-        rivalries: ['God 1', 'God 2'],
+        rivalries: ['Hades', 'Hephaestus'],
     },
     {
         name: 'Poseidon',
         description: 'Poseidon is the god of the sea, earthquakes, storms, and horses. He is the brother of Zeus and Hades, the father of Polyphemus, and the husband of Amphitrite.',
-        rivalries: ['God 1', 'God 2'],
+        rivalries: ['Athena', 'Hades'],
     },
     {
         name: 'Hades',
         description: 'Hades is the god of the underworld, the dead, wealth, and fertility. He is the brother of Zeus and Poseidon, the husband of Persephone, and the father of Zagreus.',
-        rivalries: ['God 1', 'God 2'],
+        rivalries: ['Zeus', 'Poseidon'],
     },
     {
         name: 'Aphrodite',
         description: 'Aphrodite is the goddess of love, beauty, pleasure, and procreation. She is the daughter of Zeus and Dione, the wife of Hephaestus, and the mother of Eros.',
-        rivalries: ['God 1', 'God 2'],
+        rivalries: ['Athena', 'Aphrodite'],
     },
     {
         name: 'Athena',
         description: 'Athena is the goodes of war strategy and wisdom',
-        rivalries: ['God 1', 'God 2'],
+        rivalries: ['Poseidon', 'Aphrodite'],
     },
     {
-        name: 'Haephestus',
+        name: 'Hephestus',
         description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        rivalries: ['God 1', 'God 2'],
+        rivalries: ['Zeus', 'Hephaestus'],
     }
 ]
 

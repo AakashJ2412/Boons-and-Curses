@@ -10,6 +10,31 @@ import Stats from './Stats/Stats';
 
 const TabNavigator = createBottomTabNavigator();
 
+const resetStack = ({ navigation, route }) => ({
+    tabPress: (e) => {
+        const state = navigation.getState();
+
+        if (state) {
+            // Grab all the tabs that are NOT the one we just pressed
+            const nonTargetTabs = state.routes.filter((r) => r.key !== e.target);
+
+            nonTargetTabs.forEach((tab) => {
+                // Find the tab we want to reset and grab the key of the nested stack
+                const tabName = tab?.name;
+                const stackKey = tab?.state?.key;
+
+                if (stackKey && tabName === 'Scan') {
+                    // Pass the stack key that we want to reset and use popToTop to reset it
+                    navigation.dispatch({
+                        ...StackActions.popToTop(),
+                        target: stackKey,
+                    });
+                }
+            });
+        }
+    },
+})
+
 const Game = () => {
     return (
         <TabNavigator.Navigator screenOptions={{
@@ -17,14 +42,15 @@ const Game = () => {
                 fontSize: 16,
             }
         }}>
-            <TabNavigator.Screen name="Gods" component={Gods} options={{
-                tabBarIcon: ((focused, color, size) => <FontAwesome5Icon name="user" size={20} color={color} solid/>)
+            <TabNavigator.Screen name="Stats" component={Stats} options={{
+                tabBarIcon: ((focused, color, size) => <FontAwesome5Icon name="list" size={20} color={color} solid />)
             }} />
             <TabNavigator.Screen name="Scan" component={Scan} options={{
-                tabBarIcon: ((focused, color, size) => <FontAwesome5Icon name="qrcode" size={20} color={color} solid/>)
-            }} />
-            <TabNavigator.Screen name="Stats" component={Stats} options={{
-                tabBarIcon: ((focused, color, size) => <FontAwesome5Icon name="list" size={20} color={color} solid/>)
+                tabBarIcon: ((focused, color, size) => <FontAwesome5Icon name="qrcode" size={20} color={color} solid />)
+            }}
+                listeners={resetStack} />
+            <TabNavigator.Screen name="Gods" component={Gods} options={{
+                tabBarIcon: ((focused, color, size) => <FontAwesome5Icon name="user" size={20} color={color} solid />)
             }} />
         </TabNavigator.Navigator >
     )
