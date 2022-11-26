@@ -84,9 +84,9 @@ io.on('connection',(socket)=>{
       socket.emit("godSelected", {gameSessionId: data.gameSessionId, selectVal: false})
     } else {
       console.log("game session found")
-      console.log(gameSession)
       let gameSessionInd = gameSessions.findIndex(gameSession => gameSession.id === data.gameSessionId)
       gameSessions[gameSessionInd].players.find(player => player.name === data.user).selectedGod = data.selectedGod
+      console.log(gameSession)
       socket.emit("godSelected", {gameSessionId: data.gameSessionId, selectVal: true, user: data.user})
     }
   })
