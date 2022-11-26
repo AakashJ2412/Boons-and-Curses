@@ -1,8 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Text, Card, Title, Button } from 'react-native-paper';
 import { Context } from '../../../UserContext';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { NavigationHelpersContext } from '@react-navigation/native';
+import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 
 const godsList = [
     {
@@ -44,11 +43,10 @@ const GodSelect = ({ navigation }) => {
         container: {
             flex: 1,
             alignItems: 'center',
-            overflow: "scroll"
         },
         card: {
-            minWidth: 300,
             margin: 10,
+            height: 250
         },
     });
 
@@ -58,18 +56,20 @@ const GodSelect = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            {gods.map((god, index) =>
-                <TouchableOpacity key={index} onPress={() => selectGod(index)}>
-                    <Card style={styles.card} >
-                        <Card.Content>
-                            <Title>{god.name}</Title>
-                        </Card.Content>
-                        <Card.Cover source={{ uri: 'https://picsum.photos/500' }} />
-                    </Card>
-                </TouchableOpacity>
-            )}
-        </View>
+        <ScrollView >
+            <View style={styles.container}>
+                {gods.map((god, index) =>
+                    <TouchableOpacity key={index} style={{ maxWidth: 350, width: '85%' }} onPress={() => selectGod(index)}>
+                        <Card style={styles.card} >
+                            <Card.Content>
+                                <Title>{god.name}</Title>
+                            </Card.Content>
+                            <Card.Cover source={{ uri: 'https://picsum.photos/500' }} />
+                        </Card>
+                    </TouchableOpacity>
+                )}
+            </View>
+        </ScrollView>
     );
 }
 

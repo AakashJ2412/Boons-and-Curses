@@ -1,5 +1,4 @@
 import { View, StyleSheet, TouchableOpacity, Share } from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useState, useEffect, useContext } from 'react'
 import { Text, TextInput, Button, Snackbar } from 'react-native-paper';
 import { Context } from '../../../UserContext';
