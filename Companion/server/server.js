@@ -182,7 +182,10 @@ io.on('connection',(socket)=>{
     } else {
       console.log("game session found")
       let gameSessionInd = gameSessions.findIndex(gameSession => gameSession.id === data.gameSessionId)
-      let selectGod = staticGameData.gods[data.godInd]
+      let selectGod = staticGameData.gods[data.selectedGod]
+      console.log(data.selectedGod)
+      console.log(Number.isInteger(data.selectedGod))
+      console.log(selectGod)
       gameSessions[gameSessionInd].players.find(player => player.name === data.user).selectedGod = data.selectedGod
       gameSessions[gameSessionInd].players.find(player => player.name === data.user).health = staticGameData.godStats[selectGod].health
       gameSessions[gameSessionInd].players.find(player => player.name === data.user).strength = staticGameData.godStats[selectGod].strength
