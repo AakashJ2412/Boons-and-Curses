@@ -182,14 +182,14 @@ io.on('connection',(socket)=>{
     } else {
       console.log("game session found")
       let gameSessionInd = gameSessions.findIndex(gameSession => gameSession.id === data.gameSessionId)
-      selectedGod = staticGameData.gods[data.godInd]
+      let selectGod = staticGameData.gods[data.godInd]
       gameSessions[gameSessionInd].players.find(player => player.name === data.user).selectedGod = data.selectedGod
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).health = staticGameData.godStats[selectedGod].health
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).strength = staticGameData.godStats[selectedGod].strength
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).defense = staticGameData.godStats[selectedGod].defense
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).speed = staticGameData.godStats[selectedGod].speed
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).charm = staticGameData.godStats[selectedGod].charm
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).affinity = staticGameData.godStats[selectedGod].affinity
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).health = staticGameData.godStats[selectGod].health
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).strength = staticGameData.godStats[selectGod].strength
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).defense = staticGameData.godStats[selectGod].defense
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).speed = staticGameData.godStats[selectGod].speed
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).charm = staticGameData.godStats[selectGod].charm
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).affinity = staticGameData.godStats[selectGod].affinity
       console.log(gameSession)
       socket.emit("godSelected", {gameSessionId: data.gameSessionId, selectVal: true, user: data.user})
     }
