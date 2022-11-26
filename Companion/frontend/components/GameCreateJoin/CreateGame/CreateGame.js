@@ -70,7 +70,7 @@ const CreateGame = ({ navigation }) => {
                 style={styles.input}
             />
 
-            <TouchableOpacity onPress={onShare} style={{backgroundColor:"lightgrey", width: 300,borderRadius: 2, padding: 10}}>
+            <TouchableOpacity onPress={onShare} style={{backgroundColor:"lightgrey", width: 300,borderRadius: 2, padding:5, height:40}}>
                     <Text style={styles.textHighlight} numberOfLines={1} variant="bodyLarge">{gameLink}</Text>
             </TouchableOpacity>
             <Text>
