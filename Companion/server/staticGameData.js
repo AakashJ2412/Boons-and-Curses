@@ -1,4 +1,4 @@
-export const staticGameData = {
+const staticGameData = {
     "cards": [
         "ZS1","ZS2","ZS3","ZS4",
         "HP1","HP2","HP3","HP4",
@@ -62,3 +62,5 @@ export const staticGameData = {
         }
     }
 }
+
+module.exports = staticGameData;
