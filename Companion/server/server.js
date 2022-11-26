@@ -4,7 +4,6 @@ const http = require('http')
 const PORT = process.env.PORT || 5000
 const app = express()
 const server = http.createServer(app)
-const staticGameData = require('./staticGameData')
 
 app.use('/', (req, res) => {
   res.send("Game server is running")
@@ -21,6 +20,71 @@ const getDamage = (power, probability, stab, strength, defense, plAff, oppAff) =
     return Math.floor(power * (stab) * (strength*((plAff+100)/100))/(defense*((oppAff+100)/100)))
   } else {
     return 0;
+  }
+}
+
+const staticGameData = {
+  "cards": [
+      "ZS1","ZS2","ZS3","ZS4",
+      "HP1","HP2","HP3","HP4",
+      "AP1","AP2","AP3","AP4",
+      "AT1","AT2","AT3","AT4",
+      "HD1","HD2","HD3","HD4",
+      "PS1","PS2","PS3","PS4"
+  ],
+  "oppCards": ["ZS1","HP1","HP2", "AP1","AP2","AT1","AT2","HD1","HD3","PS1"],
+  "stabCards": {"ZS": 0, "HP": 1, "AP": 2, "AT": 3, "HD": 4, "PS": 5},
+  "rivalCards": {"ZS": [1,4], "HP": [0,1], "AP": [1,3], "AT": [3,5], "HD": [0,5], "PS": [3,4]},
+  "gods": ['zeus','hephaestus','aphrodite', 'athena', 'hades', 'poseidon'],
+  "godStats": {
+      'zeus': {
+          health: 340,
+          strength: 150,
+          defense: 100,
+          speed: 110,
+          charm: 10,
+          affinity: -10    
+      },
+      'hephaestus': {
+          health: 360,
+          strength: 100,
+          defense: 170,
+          speed: 100,
+          charm: -40,
+          affinity: 0    
+      },
+      'aphrodite': {
+          health: 320,
+          strength: 100,
+          defense: 100,
+          speed: 110,
+          charm: 50,
+          affinity: 30    
+      },
+      'athena': {
+          health: 260,
+          strength: 150,
+          defense: 100,
+          speed: 120,
+          charm: 0,
+          affinity: 20    
+      },
+      'hades': {
+          health: 300,
+          strength: 120,
+          defense: 90,
+          speed: 140,
+          charm: 40,
+          affinity: 0    
+      },
+      'poseidon': {
+          health: 300,
+          strength: 100,
+          defense: 140,
+          speed: 100,
+          charm: 0,
+          affinity: 50    
+      }
   }
 }
 
@@ -65,7 +129,19 @@ io.on('connection',(socket)=>{
       console.log("game session found")
       console.log(gameSession)
       socket.emit(data.player+"_joinGameSessionResponse", {ret: true})
-      gameSession.players.push({name: data.player, selectedGod: -1})
+      gameSession.players.push({name: data.player,
+                                selectedGod: -1, 
+                                health: 0,
+                                strength: 0,
+                                defense: 0,
+                                speed: 0,
+                                charm: 0,
+                                affinity: 0,
+                                burn: 0,
+                                invulnerable: 0,
+                                lastStand: 0,
+                                blacksmith: 0
+                              })
       io.sockets.emit("playerJoined", {gameSessionId: data.gameSessionId, joinVal: true})
     }
   })
@@ -106,19 +182,32 @@ io.on('connection',(socket)=>{
     } else {
       console.log("game session found")
       let gameSessionInd = gameSessions.findIndex(gameSession => gameSession.id === data.gameSessionId)
+      selectedGod = staticGameData.gods[data.godInd]
       gameSessions[gameSessionInd].players.find(player => player.name === data.user).selectedGod = data.selectedGod
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).health = staticGameData.gods[data.selectedGod].health
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).strength = staticGameData.gods[data.selectedGod].strength
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).defense = staticGameData.gods[data.selectedGod].defense
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).speed = staticGameData.gods[data.selectedGod].speed
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).charm = staticGameData.gods[data.selectedGod].charm
-      gameSessions[gameSessionInd].players.find(player => player.name === data.user).affinity = staticGameData.gods[data.selectedGod].affinity
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).health = staticGameData.godStats[selectedGod].health
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).strength = staticGameData.godStats[selectedGod].strength
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).defense = staticGameData.godStats[selectedGod].defense
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).speed = staticGameData.godStats[selectedGod].speed
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).charm = staticGameData.godStats[selectedGod].charm
+      gameSessions[gameSessionInd].players.find(player => player.name === data.user).affinity = staticGameData.godStats[selectedGod].affinity
       console.log(gameSession)
       socket.emit("godSelected", {gameSessionId: data.gameSessionId, selectVal: true, user: data.user})
     }
   })
 
-  socket.on("getPl")
+  socket.on("getPlayerStats", (data) => {
+    console.log("get player stats")
+    const gameSession = gameSessions.find(gameSession => gameSession.id === data.gameSessionId)
+    if (!gameSession || gameSession.startState !== 1) {
+      console.log("game session not found")
+      console.log(gameSession)
+      socket.emit("playerStats", {gameSessionId: data.gameSessionId, statsVal: false})
+    } else {
+      console.log("game session found")
+      console.log(gameSession)
+      socket.emit("playerStats", {gameSessionId: data.gameSessionId, statsVal: true, user: data.user, player: gameSession.players.find(player => player.name === data.user)})
+    }
+  })
 
   socket.on("getUserStats", (data) => {
     console.log("get user stats")
