@@ -8,7 +8,7 @@ import GodSelectStack from './components/GodSelectStack/GodSelectStack';
 import Game from './components/Game/Game';
 
 import { io } from "socket.io-client";
-const socket = io("ws://192.168.203.70:5000");
+const socket = io("ws://192.168.203.74:5000");
 
 const App = () => {
 
