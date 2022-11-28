@@ -46,7 +46,6 @@ const GodSelect = ({ navigation }) => {
         },
         card: {
             margin: 10,
-            height: 250
         },
     });
 
@@ -64,7 +63,6 @@ const GodSelect = ({ navigation }) => {
                             <Card.Content>
                                 <Title>{god.name}</Title>
                             </Card.Content>
-                            <Card.Cover source={{ uri: 'https://picsum.photos/500' }} />
                         </Card>
                     </TouchableOpacity>
                 )}
