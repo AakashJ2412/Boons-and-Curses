@@ -30,10 +30,11 @@ const Scan = ({ navigation }) => {
     const [selectedOpponent, setSelectedOpponent] = useState("");
     const [alertDialogShow, setAlertDialogShow] = useState(false);
     const appContext = useContext(Context);
-    const [cardData, setCardData] = useState();
+    const [opponentCardData, setOpponentCardData] = useState();
+    var cardData = "";
 
     useEffect(() => {
-        setOpponents([...appContext.opponents]);
+        setOpponents([...appContext.opponents.filter((opponent) => opponent !== appContext.user)]);
         const getBarCodeScannerPermissions = async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setBarCodeHasPermission(status === 'granted');
@@ -44,14 +45,20 @@ const Scan = ({ navigation }) => {
 
     const handleBarCodeScanned = ({ type, data }) => {
         console.log(data);
-        setCardData(data);
+        cardData = data.replace(/[\r\n]+/gm, "");;
+        setOpponentCardData(data);
         setScanned(true);
         if (attackCardIds.includes(data)) {
             setDialogShow(true);
         }
         else {
-            // make call to execute card which don't need to choose opponent
-            appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, cardId: cardData });
+            if (cardData === 'PS2') {
+                opponents.forEach(element => {
+                    appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: element, cardId: data });
+                });
+            } else {
+                appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, cardId: cardData });
+            }
             setAlertDialogShow(true);
         }
     };
@@ -65,16 +72,15 @@ const Scan = ({ navigation }) => {
     });
 
     const opponentChosen = () => {
-        console.log(selectedOpponent);
-        //make call to execute card which requires opponent
-        if (cardData === "PS2") {
-            opponents.forEach(element => {
+        console.log(opponents)
+        if (cardData === 'PS2') {
+            appContext.opponents.forEach(element => {
                 if (element !== appContext.user) {
-                    appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: element, cardId: cardData });
+                    appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: element, cardId: opponentCardData});
                 }
             });
         } else {
-            appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: selectedOpponent, cardId: cardData });
+            appContext.socket.emit("playCard", { gameSessionId: appContext.gameId, user: appContext.user, opponent: selectedOpponent, cardId: opponentCardData });
         }
         setDialogShow(false);
         setAlertDialogShow(true);
